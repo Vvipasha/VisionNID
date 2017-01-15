@@ -76,27 +76,17 @@
 <button id='next'>Next</button>
 
 <script>
-mapboxgl.accessToken = 'pk.eyJ1IjoidmlwYXNoYSIsImEiOiJjaW1memNyNWgwMXVzdmNtNmQyemNqa3o1In0.J2DseJ4fjLUYStQrrV0fKQ'; //access token(unique), added auto by mapbox
+mapboxgl.accessToken = 'pk.eyJ1IjoidmlwYXNoYSIsImEiOiJjaW1memNyNWgwMXVzdmNtNmQyemNqa3o1In0.J2DseJ4fjLUYStQrrV0fKQ'; 
 var end = [77.534813, 13.035133];
 var start = [77.534758, 13.034842];
-//77.535090, 13.035007
+
 
 var map = new mapboxgl.Map({
     container: 'map', // container id
-    style: 'mapbox://styles/vipasha/cixuqov2r007m2so6jxaq4nji', //stylesheet location
-
-    /* below code decides zoom level and loc. if omitting this, it auto does that or set lat and long
-
-    //center: [-74.50, 40], // starting position // starting pos - add lat and long of ur loc ( here BLR)
-    //zoom: 9 // starting zoom 
-
-    */
-    pitch: 70, // pitch in degrees
+    style: 'mapbox://styles/vipasha/cixuqov2r007m2so6jxaq4nji', 
+    pitch: 70, 
     bearing: -60,
-    center: start, // starting position // starting pos - add lat and long of ur loc ( here BLR)
-
-     //#18.2/13.034789/77.535096/0 - long/lat from the share url below : 
-    /* share url ------->>>  https://api.mapbox.com/styles/v1/vipasha/cixlfiyyt00092sntvph8b3z1.html?title=true&access_token=pk.eyJ1IjoidmlwYXNoYSIsImEiOiJjaW1memNyNWgwMXVzdmNtNmQyemNqa3o1In0.J2DseJ4fjLUYStQrrV0fKQ#18.2/13.034789/77.535096/0 */
+    center: start, 
 
 
     zoom: 20// starting zoom 
@@ -111,9 +101,7 @@ var popup = new mapboxgl.Popup({
 map.on('mousemove', function(e)
  {
     var features = map.queryRenderedFeatures(e.point, { layers: ['vision-submission','garden','atm','auto','flower','shop','bus','tea stall','nid','flag','flag copy','flag copy 1','flag copy 2','flag copy 3','flag copy 4','flag copy 5','flag copy 6','flag copy 6','r1 copy 1','r1 copy 3','r1 copy','r1 copy 2','r1','garden copy 1'] }); //layers : array of strings. 
-    //e.point is current location of the pointer
-
-    // Change the cursor style as a UI indicator.
+ 
     map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
 
     console.log(features)
@@ -126,89 +114,33 @@ map.on('mousemove', function(e)
 
     var feature = features[0];
 
-    // Populate the popup and set its coordinates
-    // based on the feature found.
-    
-    /*popup.setLngLat(feature.geometry.coordinates)
-        .setHTML(feature.properties.description)
-        .addTo(map); */
-
-       /*  popup.setLngLat(feature.geometry.coordinates) // expecting one coordinate (long, lat); hence not working for lines.
-        .setHTML("the sound was because of "+feature.properties.source) // source, intensity is the key of your data source
-
-        .addTo(map); */
-
-        //var altT = feature.properties.location;
-        //var des = feature.properties.description;
-        //var url1 = feature.properties.url;
- 
-
-         //popup.setLngLat(feature.geometry.coordinates) // expecting one coordinate (long, lat); hence not working for lines.
-        //.setHTML("the sound was because of "+feature.properties.source + " with the intensity <br> <b> <center> <h2>" + feature.properties.location) // source, intensity is the key of your data source
-        
-        //var urlmarker = e.properties.url;
         var html = "<h4>"+ feature.properties.object + "</h4>";
         html += "Source : "+ feature.properties.source + "<br>";
         html += "Location : "+ feature.properties.location+ "<br>";
         html += '<img src ='+feature.properties.url+' alt = "no image found" width = 250 px>';
 
-       // var link = feature.properties.url;
-       //var link ="http://blog.oureducation.in/wp-content/uploads/2013/11/NID.jpg";
-        //var textalt = "no image found";
-
-       // popup.setLngLat(feature.geometry.coordinates) // expecting one coordinate (long, lat); hence not working for lines.
-        //.setHTML("<h2>"+feature.properties.object + " <br>" + feature.properties.source+ "<br> <img src=>") // source, intensity is the key of your data source
-        //.addTo(map);
-
-         popup.setLngLat(feature.geometry.coordinates) // expecting one coordinate (long, lat); hence not working for lines.
-        .setHTML(html) // source, intensity is the key of your data source
+         popup.setLngLat(feature.geometry.coordinates) 
+        .setHTML(html) 
         .addTo(map);
-  
-  /*geojson.features.forEach(function(marker) {
-    // create a DOM element for the marker
-    var el = document.createElement('div');
-    el.className = 'marker';
-    el.style.backgroundImage = html + marker.properties.iconSize.join('/') + '/)';
-    el.style.width = marker.properties.iconSize[0] + 'px';
-    el.style.height = marker.properties.iconSize[1] + 'px';
-
-    el.addEventListener('click', function() {
-        window.alert(marker.properties.message);
-    });
-
-    // add marker to map
-    new mapboxgl.Marker(el, {offset: [-marker.properties.iconSize[0] / 2, -marker.properties.iconSize[1] / 2]})
-        .setLngLat(marker.geometry.coordinates)
-        .addTo(map);
-});*/
-
-
 
 });
 
 var isAtStart = true;
 document.getElementById('fly').addEventListener('click', function() {
-    // depending on whether we're currently at point a or b, aim for
-    // point a or b
+    
     var target = isAtStart ? end : start;
     document.getElementById("fly").style.display="none";
-    // and now we're at the opposite point
+   
     isAtStart = !isAtStart;
     map.flyTo({
-        // These options control the ending camera position: centered at
-        // the target, at zoom level 9, and north up.
+       
         center: target,
         zoom: 20,
-        // bearing: 0,
         bearing: -70,
         pitch: 60,
-        // These options control the flight curve, making it move
-        // slowly and zoom out almost completely before starting
-        // to pan.
+        
         speed: 0.7, // make the flying slow
-        curve: 1, // change the speed at which it zooms out
-        // This can be any easing function: it takes a number between
-        // 0 and 1 and returns another number between 0 and 1.
+        curve: 1, 
         easing: function (t) {
             return t;
         }
@@ -216,7 +148,6 @@ document.getElementById('fly').addEventListener('click', function() {
 });
 var LocationNo = 1;
 
-//var loc = JSON.stringify(feature[0].geometry.coordinates,null, 2);
 
 var LocationLatLong = [[77.534813, 13.035133],[77.534509, 13.034904],[77.534517, 13.034719],[77.534435, 13.034625],[77.534371, 13.034522],[77.534186, 13.034488],[77.534205, 13.034645],[77.534143, 13.034592],[77.533965, 13.035195],[77.533638, 13.035537],[77.533352, 13.035915],[77.532108, 13.035891],[77.53172, 13.036202],[77.531073, 13.036835]];
 document.getElementById('next').addEventListener('click', function() {
@@ -225,20 +156,13 @@ document.getElementById('next').addEventListener('click', function() {
     }
     
     map.flyTo({
-        // These options control the ending camera position: centered at
-        // the target, at zoom level 9, and north up.
+   
         center: LocationLatLong[LocationNo],
         zoom: 20,
-        // bearing: 0,
         bearing: -70,
         pitch: 60,
-        // These options control the flight curve, making it move
-        // slowly and zoom out almost completely before starting
-        // to pan.
-        speed: 0.4, // make the flying slow
-        curve: 1, // change the speed at which it zooms out
-        // This can be any easing function: it takes a number between
-        // 0 and 1 and returns another number between 0 and 1.
+        speed: 0.4, 
+        curve: 1, 
         easing: function (t) {
             return t;
         }
@@ -248,20 +172,12 @@ document.getElementById('next').addEventListener('click', function() {
 document.getElementById('previous').addEventListener('click', function() {
     if (LocationNo > 0){
         map.flyTo({
-            // These options control the ending camera position: centered at
-            // the target, at zoom level 9, and north up.
             center: LocationLatLong[--LocationNo],
             zoom: 20,
-            // bearing: 0,
             bearing: -70,
             pitch: 60,
-            // These options control the flight curve, making it move
-            // slowly and zoom out almost completely before starting
-            // to pan.
-            speed: 0.4, // make the flying slow
-            curve: 1, // change the speed at which it zooms out
-            // This can be any easing function: it takes a number between
-            // 0 and 1 and returns another number between 0 and 1.
+            speed: 0.4, 
+            curve: 1, 
             easing: function (t) {
                 return t;
             }
